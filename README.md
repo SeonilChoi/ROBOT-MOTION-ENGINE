@@ -90,3 +90,26 @@ The `Controller` class computes control input to track the desired trajectory ge
 
 - **compute**
     : Computes control inputs (e.g., torques, velocities, or position commands) to follow the desired trajectory.
+
+---
+
+## User Configurations
+
+- **number_of_joints**
+    : The number of joints.
+
+- **base_configuration**
+    : The configuration of the base from world
+
+- **home_configuration**
+    : The home configuration of the end-effector from base.
+
+- **target_configuration**
+    : The target configuration of the end-effector.
+      Each target is required each state.
+
+- **screw_axes**
+    : The screw axes of the robot.
+
+- **self_collision**
+    : The DH (Denavit-Hartenberg) parameters for robot included self-collision models. 
