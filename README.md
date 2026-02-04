@@ -1,6 +1,7 @@
 # ROBOT MOTION ENGINE
 
-This project provides a framework for managing and controlling robot motion.
+The Robot Motion Engine is a software framework for managing, planning, and controlling robot motion.
+It provides a modular architecture that separates robot management, motion planning, scheduling, and control.
 
 ---
 
@@ -8,11 +9,19 @@ This project provides a framework for managing and controlling robot motion.
 
 ### RobotManager
 
-The `RobotManager` class manages robots initialized from configuration files.
+The `RobotManager` class is responsible for initializing and managing robot instances based on configuration files.
+It serves as the entry point for setting up and running robot motion.
 
-- load
-- start
-- stop
+- **load**
+    : Reads a `YAML` configuration file and maps its contents to a custom configuration structure.
+      This configuration typically includes DH parameters, limits and motion options.
+
+- **start**
+    : Starts the robot motion system.
+      If the robot is not located at the home position, it first moves the robot to the home position before executing any motion.
+
+- **stop**
+    : Stops the robot motion safely and commands the robot to return to the home position.
 
 ### RobotController
 
