@@ -4,8 +4,8 @@
 
 ## Classes
 
-### RobotMotionEngine
-The RobotMotionEngine class manages robots initialized from configuration file.
+### RobotManager
+The RobotManager class manages robots initialized from configuration file.
 
 #### functions
 

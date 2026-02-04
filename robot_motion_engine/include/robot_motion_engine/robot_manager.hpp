@@ -1,5 +1,5 @@
-#ifndef ROBOT_MOTION_ENGINE_HPP_
-#define ROBOT_MOTION_ENGINE_HPP_
+#ifndef ROBOT_MANAGER_HPP_
+#define ROBOT_MANAGER_HPP_
 
 #include <memory>
 #include <vector>
@@ -9,10 +9,10 @@
 
 namespace micros {
 
-class RobotMotionEngine {
+class RobotManager {
 public:
-    RobotMotionEngine();
-    ~RobotMotionEngine() = default;
+    RobotManager();
+    ~RobotManager() = default;
 
     void load(const std::string& config_file);
 
@@ -25,4 +25,4 @@ private:
 };
 
 } // namespace micros
-#endif // ROBOT_MOTION_ENGINE_HPP_
+#endif // ROBOT_MANAGER_HPP_
