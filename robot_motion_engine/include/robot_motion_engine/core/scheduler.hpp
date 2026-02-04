@@ -7,6 +7,10 @@ class Scheduler {
 public:
     Scheduler();
     virtual ~Scheduler() = default;
+
+    virtual void reset() = 0;
+
+    virtual void tick() = 0;
 };
 
 } // namespace micros

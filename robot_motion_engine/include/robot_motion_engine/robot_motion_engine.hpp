@@ -16,8 +16,6 @@ public:
 
     void load(const std::string& config_file);
 
-    void home();
-
     void start();
 
     void stop();
