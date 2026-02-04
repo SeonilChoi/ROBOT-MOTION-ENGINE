@@ -1,67 +1,46 @@
 # ROBOT MOTION ENGINE
 
+This project provides a framework for managing and controlling robot motion.
+
 ---
 
 ## Classes
 
 ### RobotManager
-The RobotManager class manages robots initialized from configuration file.
 
-#### functions
+The `RobotManager` class manages robots initialized from configuration files.
 
 - load
-
 - start
-
 - stop
-
-##
 
 ### RobotController
-The RobotController class controls a robot to achive generated motions.
 
-#### functions
+The `RobotController` class controls a robot to execute generated motions.
 
 - load
-
 - home
-
 - start
-
 - stop
 
-##
-
 ### Scheduler
-The Scheduer class manages sequence of actions of the robot. The actions is represnted as states.
-We used to concept FSM (Finite State Machine).
 
-#### functions
+The `Scheduer` class manages a sequence of robot actions.
+Actions are represnted as states, following the concept of an FSM (Finite State Machine).
 
 - reset
-
 - tick
 
-##
-
 ### Planner
-The Planner class generates motions or path required at the state.
 
-#### functions
+The `Planner` class generates motions or paths required for each state.
 
 - reset
-
 - eval
 
-##
-
 ### Controller
-The Controller class compute control input to achive the trajectory.
 
-#### functions
+The `Controller` class computes control input to track the desired trajectory.
 
 - reset
-
 - compute
-
-##
