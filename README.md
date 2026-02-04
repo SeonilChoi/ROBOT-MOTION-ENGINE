@@ -29,13 +29,13 @@ The `RobotController` class controls a single robot to execute motions generated
 Also It has a scheduler to manage states and a controller to compute control inputs.
 
 - **load**
-    : Initializes parameters of the robot and determines types of a scheduler, planner and controller.
+    : Initializes robot parameters and determines the types of the scheduler, planner, and controller.
 
 - **home**
     : Moves the robot to its predefined home position.
 
 - **start**
-    : Begins executing motion commands provided by the controller until the **stop** command is pubished.
+    : Begins executing motion commands provided by the controller until a stop command is pubished.
 
 - **stop**
     : Stops motion execution and safely halts the robot.
