@@ -257,9 +257,63 @@ bool micros::is_valid_SE3(const Eigen::Matrix4d& mat) {
 }
 
 std::pair<bool, Eigen::VectorXd> micros::inverse_kinematics_space(const Eigen::MatrixXd& M, const Eigen::MatrixXd& S_list, const Eigen::MatrixXd& T, const Eigen::VectorXd& theta_list_int, double e_ori, double e_pos) {
+    Eigen::Matrix4d T_cur = forward_kinematics_space(M, S_list, theta_list_int);
+    Eigen::Matrix4d T_err = inv_T(T) * T_cur;
+    Eigen::VectorXd Vs = adjoint(T_cur) * se3_to_vec(log_6(T_err));
+    Eigen::Vector3d angular = Vs.head<3>();
+    Eigen::Vector3d linear = Vs.tail<3>();
+
+    bool is_success = (angular.norm() < e_ori && linear.norm() < e_pos);
+    if (is_success) {
+        return std::make_pair(true, theta_list_int);
+    }
     
+    Eigen::VectorXd theta_list = theta_list_int;
+    for (int i = 0; i < MAX_IK_ITER; i++) {
+        Eigen::MatrixXd Js = jacobian_space(S_list, theta_list);
+        theta_list += Js.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(Vs);
+
+        T_cur = forward_kinematics_space(M, S_list, theta_list);
+        T_err = inv_T(T) * T_cur;
+        Vs = adjoint(T_cur) * se3_to_vec(log_6(T_err));
+        angular = Vs.head<3>();
+        linear = Vs.tail<3>();
+
+        is_success = (angular.norm() < e_ori && linear.norm() < e_pos);
+        if (is_success) {
+            return std::make_pair(true, theta_list);
+        }
+    }
+    return std::make_pair(false, theta_list);
 }
 
 std::pair<bool, Eigen::VectorXd> micros::inverse_kinematics_body(const Eigen::MatrixXd& M, const Eigen::MatrixXd& B_list, const Eigen::MatrixXd& T, const Eigen::VectorXd& theta_list_int, double e_ori, double e_pos) {
-    
+    Eigen::Matrix4d T_cur = forward_kinematics_body(M, B_list, theta_list_int);
+    Eigen::Matrix4d T_err = inv_T(T) * T_cur;
+    Eigen::VectorXd Vb = se3_to_vec(log_6(T_err));
+    Eigen::Vector3d angular = Vb.head<3>();
+    Eigen::Vector3d linear = Vb.tail<3>();
+
+    bool is_success = (angular.norm() < e_ori && linear.norm() < e_pos);
+    if (is_success) {
+        return std::make_pair(true, theta_list_int);
+    }
+
+    Eigen::VectorXd theta_list = theta_list_int;
+    for (int i = 0; i < MAX_IK_ITER; i++) {
+        Eigen::MatrixXd Jb = jacobian_body(B_list, theta_list);
+        theta_list += Jb.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(Vb);
+
+        T_cur = forward_kinematics_body(M, B_list, theta_list);
+        T_err = inv_T(T) * T_cur;
+        Vb = se3_to_vec(log_6(T_err));
+        angular = Vb.head<3>();
+        linear = Vb.tail<3>();
+        
+        is_success = (angular.norm() < e_ori && linear.norm() < e_pos);
+        if (is_success) {
+            return std::make_pair(true, theta_list);
+        }
+    }
+    return std::make_pair(false, theta_list);
 }

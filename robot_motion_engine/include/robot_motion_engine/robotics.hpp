@@ -222,6 +222,7 @@ bool is_valid_SE3(const Eigen::Matrix4d& mat);
 * @param e_ori The desired orientation error.
 * @param e_pos The desired position error.
 * @return True if the inverse kinematics is successful, false otherwise.
+* @return The joint angles that achieve the desired configuration.
 */
 std::pair<bool, Eigen::VectorXd> inverse_kinematics_space(const Eigen::MatrixXd& M, const Eigen::MatrixXd& S_list, const Eigen::MatrixXd& T, const Eigen::VectorXd& theta_list_int, double e_ori, double e_pos);
 
@@ -234,6 +235,7 @@ std::pair<bool, Eigen::VectorXd> inverse_kinematics_space(const Eigen::MatrixXd&
 * @param e_ori The desired orientation error.
 * @param e_pos The desired position error.
 * @return True if the inverse kinematics is successful, false otherwise.
+* @return The joint angles that achieve the desired configuration.
 */
 std::pair<bool, Eigen::VectorXd> inverse_kinematics_body(const Eigen::MatrixXd& M, const Eigen::MatrixXd& B_list, const Eigen::MatrixXd& T, const Eigen::VectorXd& theta_list_int, double e_ori, double e_pos);
 
