@@ -15,7 +15,7 @@ The RobotManager class manages robots initialized from configuration file.
 
 - stop
 
-___
+##
 
 ### RobotController
 The RobotController class controls a robot to achive generated motions.
@@ -30,7 +30,7 @@ The RobotController class controls a robot to achive generated motions.
 
 - stop
 
-___
+##
 
 ### Scheduler
 The Scheduer class manages sequence of actions of the robot. The actions is represnted as states.
@@ -42,7 +42,7 @@ We used to concept FSM (Finite State Machine).
 
 - tick
 
-___
+##
 
 ### Planner
 The Planner class generates motions or path required at the state.
@@ -53,7 +53,7 @@ The Planner class generates motions or path required at the state.
 
 - eval
 
-___
+##
 
 ### Controller
 The Controller class compute control input to achive the trajectory.
@@ -64,4 +64,4 @@ The Controller class compute control input to achive the trajectory.
 
 - compute
 
-***
+##
