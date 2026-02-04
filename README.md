@@ -15,6 +15,8 @@ The RobotManager class manages robots initialized from configuration file.
 
 - stop
 
+-----
+
 ### RobotController
 The RobotController class controls a robot to achive generated motions.
 
