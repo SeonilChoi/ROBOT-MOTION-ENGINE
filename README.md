@@ -35,7 +35,8 @@ Also It has a scheduler to manage states and a controller to compute control inp
 #### Functions
 
 - **load**
-    : Initializes robot parameters and determines the types of the scheduler, planner, and controller.
+    : Initializes motion parameters from the custom configuration structure.
+      The scheduler, planner, and controller are initialized.
 
 - **home**
     : Moves the robot to its predefined home position.
@@ -105,7 +106,7 @@ The `Controller` class computes control input to track the desired trajectory ge
     : The list of driver IDs that control the robot.
 
 - **home_position**
-    : The home position of the robot in the joint space.
+    : The home position of the robot in joint space.
 
 - **base_configuration**
     : The configuration of the robot base with respect to the world frame.
@@ -122,3 +123,4 @@ The `Controller` class computes control input to track the desired trajectory ge
 
 - **self_collision**
     : The DH (Denavit-Hartenberg) parameters of the robot, including self-collision models.
+    
