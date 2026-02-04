@@ -239,19 +239,85 @@ std::pair<bool, Eigen::VectorXd> inverse_kinematics_space(const Eigen::MatrixXd&
 */
 std::pair<bool, Eigen::VectorXd> inverse_kinematics_body(const Eigen::MatrixXd& M, const Eigen::MatrixXd& B_list, const Eigen::MatrixXd& T, const Eigen::VectorXd& theta_list_int, double e_ori, double e_pos);
 
+/**
+* Calculate the 6x6 adjoint matrix of the given 6-vector.
+* @param vec The 6-vector to calculate the adjoint matrix.
+* @return The 6x6 adjoint matrix.
+*/
+Eigen::MatrixXd ad(Eigen::VectorXd vec);
+
+/**
+* Compute the mass matrix of an open chain robot from the given configuration.
+* @param theta_list The joint angles.
+* @param M_list List of link frames i relative to i-1 at the home position.
+* @param G_list Spatial inertia matrices Gi of the links.
+* @param S_list Screw axes Si of the joints in a space frame.
+* @return The numerical mass matrix of an n-joints open chain robot at the given configuration and joint angles.
+*/
 Eigen::MatrixXd mass_matrix(const Eigen::VectorXd& theta_list, const std::vector<Eigen::MatrixXd>& M_list, const std::vector<Eigen::MatrixXd>& G_list, const Eigen::MatrixXd& S_list);
 
+/**
+* Compute the Coriolis and centripetal terms in the inverse dynamics equation.
+* @param theta_list The joint angles.
+* @param dtheta_list The joint velocities.
+* @param M_list List of link frames i relative to i-1 at the home position.
+* @param G_list Spatial inertia matrices Gi of the links.
+* @param S_list Screw axes Si of the joints in a space frame.
+* @return The Coriolis and centripetal terms in the inverse dynamics equation.
+*/
 Eigen::VectorXd coriolis_force(const Eigen::VectorXd& theta_list, const Eigen::VectorXd& dtheta_list, const std::vector<Eigen::MatrixXd>& M_list, const std::vector<Eigen::MatrixXd>& G_list, const Eigen::MatrixXd& S_list);
 
+/**
+* Compute the gravity force an open chain robot requires to overcome gravity at its configuration.
+* @param theta_list The joint angles.
+* @param g The gravity vector.
+* @param M_list List of link frames i relative to i-1 at the home position.
+* @param G_list Spatial inertia matrices Gi of the links.
+* @param S_list Screw axes Si of the joints in a space frame.
+* @return The joint forces or torques required to overcome gravity at the given configuration.
+*/
 Eigen::VectorXd gravity_force(const Eigen::VectorXd& theta_list, const Eigen::VectorXd& g, const std::vector<Eigen::MatrixXd>& M_list, const std::vector<Eigen::MatrixXd>& G_list, const Eigen::MatrixXd& S_list);
 
+/**
+* Compute the joint forces or torques required to achieve a desired end-effector force.
+* @param theta_list The joint angles.
+* @param f_tip Spatial force applied by the end-effector expressed in frame {n+1}.
+* @param M_list List of link frames i relative to i-1 at the home position.
+* @param G_list Spatial inertia matrices Gi of the links.
+* @param S_list Screw axes Si of the joints in a space frame.
+* @return The joint forces or torques required to achieve the desired end-effector force or torque.
+*/
 Eigen::VectorXd end_effector_force(const Eigen::VectorXd& theta_list, const Eigen::VectorXd& f_tip, const std::vector<Eigen::MatrixXd>& M_list, const std::vector<Eigen::MatrixXd>& G_list, const Eigen::MatrixXd& S_list);
 
+/**
+ * Compute forward dynamics in the space frame for an open chain robot.
+ * @param theta_list The joint angles.
+ * @param dtheta_list The joint velocities.
+ * @param tau_list The joint torques.
+ * @param g The gravity vector.
+ * @param f_tip Spatial force applied by the end-effector expressed in frame {n+1}.
+ * @param M_list List of link frames i relative to i-1 at the home position.
+ * @param G_list Spatial inertia matrices Gi of the links.
+ * @param S_list Screw axes Si of the joints in a space frame.
+ * @return The n-vector of joint accelerations [JTF].
+*/
 Eigen::VectorXd forward_dynamics(const Eigen::VectorXd& theta_list, const Eigen::VectorXd& dtheta_list, const Eigen::VectorXd& tau_list, const Eigen::VectorXd& g, const Eigen::VectorXd& f_tip,
                                  const std::vector<Eigen::MatrixXd>& M_list, const std::vector<Eigen::MatrixXd>& G_list, const Eigen::MatrixXd& S_list);
 
-Eigen::VectorXd inverse_dynamics(const Eigen::VectorXd& theta_list, const Eigen::VectorXd& dtheta_list, const Eigen::VectorXd& ddtheta_list, const Eigen::VectorXd& g, const Eigen::VectorXd& f_tip,
-                                 const std::vector<Eigen::MatrixXd>& M_list, const std::vector<Eigen::MatrixXd>& G_list, const Eigen::MatrixXd& S_list);
+/**
+ * Compute inverse dynamics in the space frame for an open chain robot.
+ * @param theta_list The joint angles.
+ * @param dtheta_list The joint velocities.
+ * @param ddtheta_list The joint accelerations.
+ * @param g The gravity vector.
+ * @param f_tip Spatial force applied by the end-effector expressed in frame {n+1}.
+ * @param M_list List of link frames i relative to i-1 at the home position.
+ * @param G_list Spatial inertia matrices Gi of the links.
+ * @param S_list Screw axes Si of the joints in a space frame.
+ * @return The n-vector of required joint forces or torques.
+*/
+Eigen::VectorXd inverse_dynamics(const Eigen::VectorXd& theta_list, const Eigen::VectorXd& dtheta_list, const Eigen::VectorXd& ddtheta_list, const Eigen::Vector3d& g, const Eigen::VectorXd& f_tip,
+                                 const std::vector<Eigen::Matrix4d>& M_list, const std::vector<Eigen::MatrixXd>& G_list, const Eigen::MatrixXd& S_list);
 
 void euler_step(Eigen::VectorXd& theta_list, Eigen::VectorXd& dtheta_list, const Eigen::VectorXd& ddtheta_list, const double dt);
 

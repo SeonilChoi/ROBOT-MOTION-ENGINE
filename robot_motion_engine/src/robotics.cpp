@@ -115,8 +115,8 @@ Eigen::Matrix4d micros::exp_6(const Eigen::Matrix4d& mat) {
     } else {
         double theta = (axis_angle_3(omg_theta))(3);
         exp_mat.block<3, 3>(0, 0) = exp_3(so3mat);
-        exp_mat.block<3, 1>(0, 3) = Eigen::Matrix3d::Identity() * theta + \
-                                    (1 - std::cos(theta)) * mat.block<3, 3>(0, 0) / theta + \
+        exp_mat.block<3, 1>(0, 3) = Eigen::Matrix3d::Identity() * theta +
+                                    (1 - std::cos(theta)) * mat.block<3, 3>(0, 0) / theta +
                                     (theta - std::sin(theta)) * ((mat.block<3, 3>(0, 0) / theta) * (mat.block<3, 3>(0, 0) / theta));
         exp_mat.row(3) << 0, 0, 0, 1;
     }
@@ -135,7 +135,7 @@ Eigen::Matrix4d micros::log_6(const Eigen::Matrix4d& mat) {
     } else {
         double theta = std::acos((Rp.first.trace() - 1.0) / 2.0);
         log_mat.block<3, 3>(0, 0) = so3mat;
-        log_mat.block<3, 1>(0, 3) = ((Eigen::Matrix3d::Identity() - so3mat / 2.0) + \
+        log_mat.block<3, 1>(0, 3) = ((Eigen::Matrix3d::Identity() - so3mat / 2.0) +
                                      ((1.0 / theta - 1.0 / std::tan(theta / 2.0) / 2.0) * (so3mat * so3mat) / theta)) * Rp.second;
         log_mat.row(3) << 0, 0, 0, 0;
     }
@@ -316,4 +316,100 @@ std::pair<bool, Eigen::VectorXd> micros::inverse_kinematics_body(const Eigen::Ma
         }
     }
     return std::make_pair(false, theta_list);
+}
+
+Eigen::MatrixXd micros::ad(Eigen::VectorXd vec) {
+    Eigen::MatrixXd omg_mat = vec_to_so3(vec.head<3>());
+
+    Eigen::MatrixXd Ad = Eigen::MatrixXd::Zero(6, 6);
+    Ad.block<3, 3>(0, 0) = omg_mat;
+    Ad.block<3, 3>(0, 3) = Eigen::Matrix3d::Zero();
+    Ad.block<3, 3>(3, 0) = vec_to_so3(vec.tail<3>());
+    Ad.block<3, 3>(3, 3) = omg_mat;
+    return Ad;
+}
+
+Eigen::MatrixXd micros::mass_matrix(const Eigen::VectorXd& theta_list, const std::vector<Eigen::MatrixXd>& M_list, const std::vector<Eigen::MatrixXd>& G_list, const Eigen::MatrixXd& S_list) {
+    int n = theta_list.size();
+    Eigen::VectorXd zero_n = Eigen::VectorXd::Zero(n);
+    Eigen::Vector3d zero_3 = Eigen::Vector3d::Zero();
+    Eigen::VectorXd zero_6 = Eigen::VectorXd::Zero(6);
+    
+    Eigen::MatrixXd M = Eigen::MatrixXd::Zero(n, n);
+    for (int i = 0; i < n; i++) {
+        Eigen::VectorXd ddtheta_list = zero_n;
+        ddtheta_list(i) = 1.0;
+        M.col(i) = inverse_dynamics(theta_list, zero_n, ddtheta_list, zero_3, zero_6, M_list, G_list, S_list);
+    }
+    return M;
+}
+
+Eigen::VectorXd micros::coriolis_force(const Eigen::VectorXd& theta_list, const Eigen::VectorXd& dtheta_list, const std::vector<Eigen::MatrixXd>& M_list, const std::vector<Eigen::MatrixXd>& G_list, const Eigen::MatrixXd& S_list) {
+    int n = theta_list.size();
+    Eigen::VectorXd zero_n = Eigen::VectorXd::Zero(n);
+    Eigen::Vector3d zero_3 = Eigen::Vector3d::Zero();
+    Eigen::VectorXd zero_6 = Eigen::VectorXd::Zero(6);
+    return inverse_dynamics(theta_list, dtheta_list, zero_n, zero_3, zero_6, M_list, G_list, S_list);
+}
+
+Eigen::VectorXd micros::gravity_force(const Eigen::VectorXd& theta_list, const Eigen::VectorXd& g, const std::vector<Eigen::MatrixXd>& M_list, const std::vector<Eigen::MatrixXd>& G_list, const Eigen::MatrixXd& S_list) {
+    int n = theta_list.size();
+    Eigen::VectorXd zero_n = Eigen::VectorXd::Zero(n);
+    Eigen::VectorXd zero_6 = Eigen::VectorXd::Zero(6);
+    return inverse_dynamics(theta_list, zero_n, zero_n, g, zero_6, M_list, G_list, S_list);
+}
+
+Eigen::VectorXd micros::end_effector_force(const Eigen::VectorXd& theta_list, const Eigen::VectorXd& f_tip, const std::vector<Eigen::MatrixXd>& M_list, const std::vector<Eigen::MatrixXd>& G_list, const Eigen::MatrixXd& S_list) {
+    int n = theta_list.size();
+    Eigen::VectorXd zero_n = Eigen::VectorXd::Zero(n);
+    Eigen::Vector3d zero_3 = Eigen::Vector3d::Zero();
+
+    return inverse_dynamics(theta_list, zero_n, zero_n, zero_3, f_tip, M_list, G_list, S_list);
+}
+
+Eigen::VectorXd micros::forward_dynamics(const Eigen::VectorXd& theta_list, const Eigen::VectorXd& dtheta_list, const Eigen::VectorXd& tau_list, const Eigen::VectorXd& g, const Eigen::VectorXd& f_tip,
+                                         const std::vector<Eigen::MatrixXd>& M_list, const std::vector<Eigen::MatrixXd>& G_list, const Eigen::MatrixXd& S_list) {
+
+    Eigen::VectorXd total_force = tau_list - coriolis_force(theta_list, dtheta_list, M_list, G_list, S_list) 
+                                           - gravity_force(theta_list, g, M_list, G_list, S_list)
+                                           - end_effector_force(theta_list, f_tip, M_list, G_list, S_list);
+
+    Eigen::MatrixXd M = mass_matrix(theta_list, M_list, G_list, S_list);
+
+    return M.ldlt().solve(total_force);
+}
+
+Eigen::VectorXd micros::inverse_dynamics(const Eigen::VectorXd& theta_list, const Eigen::VectorXd& dtheta_list, const Eigen::VectorXd& ddtheta_list, const Eigen::Vector3d& g, const Eigen::VectorXd& f_tip,
+                                         const std::vector<Eigen::Matrix4d>& M_list, const std::vector<Eigen::MatrixXd>& G_list, const Eigen::MatrixXd& S_list) {
+
+    int n = theta_list.size(); 
+    
+    Eigen::Matrix4d M_i = Eigen::Matrix4d::Zero();
+    Eigen::MatrixXd A_i = Eigen::MatrixXd::Zero(6, n);
+    std::vector<Eigen::MatrixXd> AdT_i(n+1, Eigen::MatrixXd::Identity(6, 6));
+    Eigen::MatrixXd V_i = Eigen::MatrixXd::Zero(6, n+1);
+    Eigen::MatrixXd Vd_i = Eigen::MatrixXd::Zero(6, n+1);
+
+    Vd_i.block<3, 1>(3, 0) = -g;
+    AdT_i[n] = adjoint(inv_T(M_list[n]));
+    Eigen::VectorXd F_i = f_tip;
+
+    Eigen::VectorXd tau_list = Eigen::VectorXd::Zero(n);
+    for (int i = 0; i < n; i++) {
+        M_i = M_i * M_list[i];
+        A_i.col(i) = adjoint(inv_T(M_i)) * S_list.col(i);
+
+        AdT_i[i] = adjoint(exp_6(vec_to_se3(A_i*col(i) * -theta_list(i))) * inv_T(M_list[i]));
+
+        V_i.col(i+1) = AdT_i[i] * Vi.col(i) + A_i.col(i) * dtheta_list(i);
+        Vd_i.col(i+1) = AdT_i[i] * Vd_i.col(i) + A_i.col(i) * ddtheta_list(i) +
+                        ad(V_i.col(i+1)) * A_i.col(i) * dtheta_list(i);
+    }
+
+    for (int i = n-1; i >= 0; i++) {
+        F_i = AdT_i[i+1].transpose() * F_i + G_list[i] * Vd_i.col(i+1) -
+              ad(V_i.col(i+1)).transpose() * (G_list[i] * V_i.col(i+1));
+        tau_list(i) = F_i.transpose() * A_i.col(i);
+    }
+    return tau_list;
 }
