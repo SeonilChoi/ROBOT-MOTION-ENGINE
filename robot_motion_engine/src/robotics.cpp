@@ -413,3 +413,21 @@ Eigen::VectorXd micros::inverse_dynamics(const Eigen::VectorXd& theta_list, cons
     }
     return tau_list;
 }
+
+void micros::euler_step(Eigen::VectorXd& theta_list, Eigen::VectorXd& dtheta_list, const Eigen::VectorXd& ddtheta_list, const double dt) {
+    theta_list += dtheta_list * dt;
+    dtheta_list += ddtheta_list * dt;
+}
+
+Eigen::VectorXd micros::compute_torque(const Eigen::VectorXd& theta_list, const Eigen::VectorXd& dtheta_list, const Eigen::VectorXd& e_int, const Eigen::VectorXd& g,
+                                       const std::vector<Eigen::MatrixXd>& M_list, const std::vector<Eigen::MatrixXd>& G_list, const Eigen::MatrixXd& S_list,
+                                       const Eigen::VectorXd& theta_list_ref, const Eigen::VectorXd& dtheta_list_ref, const Eigen::VectorXd& ddtheta_list_ref, const double Kp, const double Ki, const double Kd) {
+
+    Eigen::VectorXd e = theta_list_ref - theta_list;
+    Eigen::VectorXd tau_feedback = mass_matrix() * (Kp * e + Ki * (e_int + e) + Kd * (dtheta_list_ref - dtheta_list));
+
+    Eigen::VectorXd f_tip = Eigen::VectorXd::Zero(6);
+    Eigen::VectorXd tau_inverse_dynamics = inverse_dynamics(theta_list, dtheta_list, ddtheta_list_ref, g, f_tip, M_list, G_list, S_list);
+    
+    return tau_feedback + tau_inverse_dynamics;
+}

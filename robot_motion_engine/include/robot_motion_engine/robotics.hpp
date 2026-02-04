@@ -319,8 +319,32 @@ Eigen::VectorXd forward_dynamics(const Eigen::VectorXd& theta_list, const Eigen:
 Eigen::VectorXd inverse_dynamics(const Eigen::VectorXd& theta_list, const Eigen::VectorXd& dtheta_list, const Eigen::VectorXd& ddtheta_list, const Eigen::Vector3d& g, const Eigen::VectorXd& f_tip,
                                  const std::vector<Eigen::Matrix4d>& M_list, const std::vector<Eigen::MatrixXd>& G_list, const Eigen::MatrixXd& S_list);
 
+/**
+* Update the joint angles and velocities using the Euler method.
+* @param theta_list The joint angles.
+* @param dtheta_list The joint velocities.
+* @param ddtheta_list The joint accelerations.
+* @param dt The time step.
+*/
 void euler_step(Eigen::VectorXd& theta_list, Eigen::VectorXd& dtheta_list, const Eigen::VectorXd& ddtheta_list, const double dt);
 
+/**
+* Compute the joint control torques at a particular time instant.
+* @param theta_list The joint angles.
+* @param dtheta_list The joint velocities.
+* @param e_int The integral of the error.
+* @param g The gravity vector.
+* @param M_list List of link frames i relative to i-1 at the home position.
+* @param G_list Spatial inertia matrices Gi of the links.
+* @param S_list Screw axes Si of the joints in a space frame.
+* @param theta_list_ref The reference joint angles.
+* @param dtheta_list_ref The reference joint velocities.
+* @param ddtheta_list_ref The reference joint accelerations.
+* @param Kp The proportional gain.
+* @param Ki The integral gain.
+* @param Kd The derivative gain.
+* @return The joint control torques.
+*/
 Eigen::VectorXd compute_torque(const Eigen::VectorXd& theta_list, const Eigen::VectorXd& dtheta_list, const Eigen::VectorXd& e_int, const Eigen::VectorXd& g,
                                const std::vector<Eigen::MatrixXd>& M_list, const std::vector<Eigen::MatrixXd>& G_list, const Eigen::MatrixXd& S_list,
                                const Eigen::VectorXd& theta_list_ref, const Eigen::VectorXd& dtheta_list_ref, const Eigen::VectorXd& ddtheta_list_ref, const double Kp, const double Ki, const double Kd);
