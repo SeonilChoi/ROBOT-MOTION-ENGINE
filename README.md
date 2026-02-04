@@ -95,21 +95,30 @@ The `Controller` class computes control input to track the desired trajectory ge
 
 ## User Configurations
 
-- **number_of_joints**
-    : The number of joints.
+- **name**
+    : The name of the robot.
+
+- **id**
+    : The ID of therobot.
+
+- **driver_ids**
+    : The list of driver IDs that control the robot.
+
+- **home_position**
+    : The home position of the robot in the joint space.
 
 - **base_configuration**
-    : The configuration of the base from world
+    : The configuration of the robot base with respect to the world frame.
 
 - **home_configuration**
-    : The home configuration of the end-effector from base.
+    : The home configuration of the end-effector with respect to the base frame.
 
 - **target_configuration**
-    : The target configuration of the end-effector.
-      Each target is required each state.
+    : The target configuration of the end-effector with respect to the world frame.
+      Each target is required for each state.
 
 - **screw_axes**
     : The screw axes of the robot.
 
 - **self_collision**
-    : The DH (Denavit-Hartenberg) parameters for robot included self-collision models. 
+    : The DH (Denavit-Hartenberg) parameters of the robot, including self-collision models.

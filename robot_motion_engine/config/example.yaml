@@ -1,0 +1,8 @@
+robots:
+  - name: little_reader
+    id: 0
+    slave_ids: [0, 1, 2, 3]
+    base_configuration:
+      position: [0, 0, 0] # [x, y, z] in meter
+      orientation: [0, 0, 20.0] # [roll, pitch, yaw] in degree
+    home_configuration:
