@@ -130,7 +130,22 @@ The `Controller` class computes control inputs to track the desired trajectory g
 
 This section describes concrete implementations that inherit from the core classes.
 
-### Scheduler Implementations
+### `Scheduler` Implementations
 
 #### `FsmScheduler`
 
+#### `GaitScheduler`
+
+### `Planner` Implemetations
+
+#### `TrajectoryPlanner`
+
+#### `PathPlanner`
+
+### `Controller` Implmentations
+
+#### `PidController`
+
+#### `OptimalController`
+
+#### `ForceController`
