@@ -165,11 +165,16 @@ This section describes concrete implementations that inherit from the core class
 
 ### `robot_config_t`
 
-    : id `uint8_t`
-    : driver_ids `std::vector<uint8_t>`
-    : home_position `std::vector<double>`
-    : base_configuration `std::vector<std::array<3, double>>`
-    : home_configuration `std::vector<std::array<3, double>>`
-    : target_configuration 'std::vector<std::vector<std::array<3, double>>>`
-    : screw_axes `std::vector<std::array<6, double>>`
-    : self_collision `std::vector<std::array<4, double>>`
+```
+
+uint8_t id
+std::vector<uint8_t> driver_ids
+std::vector<double> home_position
+std::vector<std::array<3, double>> base_configuration
+std::vector<std::array<3, double>> home_configuration
+std::vector<std::vector<std::array<3, double>>> target_configuration
+std::vector<std::array<6, double>> screw_axes
+std::vector<std::array<4, double>> self_collision
+
+```
+
