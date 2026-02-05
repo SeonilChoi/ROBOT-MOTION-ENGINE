@@ -1,32 +1,60 @@
 robots:
-  - name: little_reader
-    id: 0
-    driver_ids: [0, 1, 2, 3]
-    home_position: [0.0, 0.0, 0.0, 0.0] # in degree
+  - id: 0
+    type: open_chain
+    driver_ids: [0, 1]
+    home_joint_position: [0.0, 45.0] 
     base_configuration:
-      position:    [0, 0,    0]    # [x, y, z] in meter
-      orientation: [0, 0, 20.0] # [roll, pitch, yaw] in degree
+      position: [0.0, 0.0, 0.0] 
+      orientation: [0.0, 0.0, 0.0] 
     home_configuration:
-      position:    [0, 0, 0] 
-      orientation: [0, 0, 0] 
+      position: [0.0, 0.0, 0.0] 
+      orientation: [0.0, 0.0, 0.0] 
     target_configuration:
-      - position:    [0, 0, 0] # left leg start position
-        orientation: [0, 0, 0] # left leg start orientation
-      - position:    [0, 0, 0] # left leg end position
-        orientation: [0, 0, 0] # left leg end orientation
-      - position:    [0, 0, 0] # right leg start position
-        orientation: [0, 0, 0] # right leg start orientation
-      - position:    [0, 0, 0] # right leg end position
-        orientation: [0, 0, 0] # right leg end orientation
+      - position: [0.0, 0.0, 0.0] 
+        orientation: [0.0, 0.0, 0.0] 
+      - position: [0.0, 0.0, 0.0] 
+        orientation: [0.0, 0.0, 0.0] 
     screw_axes:
-      - [0, 0, 0, 0, 0, 0] # [x, y, z, roll, pitch, yaw] in degree
-      - [0, 0, 0, 0, 0, 0] 
-      - [0, 0, 0, 0, 0, 0] 
-      - [0, 0, 0, 0, 0, 0] 
+      - [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] 
+      - [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] 
     self_collision:
-      - [0, 0, 0, 0] # [a, alpha, d, theta]
-      - [0, 0, 0, 0] 
-      - [0, 0, 0, 0] 
-      - [0, 0, 0, 0] 
-      - [0, 0, 0, 0] 
-      - [0, 0, 0, 0]
+      - [0.0, 0.0, 0.0, 0.0] 
+      - [0.0, 0.0, 0.0, 0.0] 
+      - [0.0, 0.0, 0.0, 0.0] 
+      - [0.0, 0.0, 0.0, 0.0]
+      - [0.0, 0.0, 0.0, 0.0] 
+      - [0.0, 0.0, 0.0, 0.0] 
+      - [0.0, 0.0, 0.0, 0.0] 
+      - [0.0, 0.0, 0.0, 0.0]
+      - [0.0, 0.0, 0.0, 0.0]
+    obstacle_ids: [0, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+
+  - id: 1
+    type: open_chain
+    driver_ids: [2, 3]
+    home_joint_position: [0.0, -45.0]
+    base_configuration:
+      position: [0.0, 0.0, 0.0] 
+      orientation: [0.0, 0.0, 0.0] 
+    home_configuration:
+      position: [0.0, 0.0, 0.0] 
+      orientation: [0.0, 0.0, 0.0] 
+    target_configuration:
+      - position: [0.0, 0.0, 0.0] 
+        orientation: [0.0, 0.0, 0.0] 
+      - position: [0.0, 0.0, 0.0] 
+        orientation: [0.0, 0.0, 0.0] 
+    screw_axes:
+      - [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] 
+      - [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] 
+    self_collision:
+      - [0.0, 0.0, 0.0, 0.0] 
+      - [0.0, 0.0, 0.0, 0.0] 
+      - [0.0, 0.0, 0.0, 0.0] 
+      - [0.0, 0.0, 0.0, 0.0]
+      - [0.0, 0.0, 0.0, 0.0] 
+      - [0.0, 0.0, 0.0, 0.0] 
+      - [0.0, 0.0, 0.0, 0.0] 
+      - [0.0, 0.0, 0.0, 0.0]
+      - [0.0, 0.0, 0.0, 0.0]
+    obstacle_ids: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]

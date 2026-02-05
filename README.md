@@ -34,10 +34,6 @@ It also has a scheduler to manage states and a controller to compute control inp
 
 #### Functions
 
-- `load`
-    : Initializes motion parameters from the custom configuration structure.
-      The scheduler, planner, and controller are initialized.
-
 - `home`
     : Moves the robot to its predefined home position.
 
@@ -139,17 +135,23 @@ This section describes concrete implementations that inherit from the core class
 
 #### `MobileRobotController`
 
+##
+
 ### `Scheduler` Implementations
 
 #### `FsmScheduler`
 
 #### `GaitScheduler`
 
+##
+
 ### `Planner` Implemetations
 
 #### `TrajectoryPlanner`
 
 #### `PathPlanner`
+
+##
 
 ### `Controller` Implmentations
 
@@ -163,6 +165,15 @@ This section describes concrete implementations that inherit from the core class
 
 ## Types
 
+### `pose_t`
+
+```
+
+std::array<double, 3> position
+std::array<double, 3> orientation
+
+```
+
 ### `robot_config_t`
 
 ```
@@ -170,11 +181,10 @@ This section describes concrete implementations that inherit from the core class
 uint8_t id
 std::vector<uint8_t> driver_ids
 std::vector<double> home_position
-std::vector<std::array<3, double>> base_configuration
-std::vector<std::array<3, double>> home_configuration
-std::vector<std::vector<std::array<3, double>>> target_configuration
-std::vector<std::array<6, double>> screw_axes
-std::vector<std::array<4, double>> self_collision
+pose_t base_configuration
+pose_t home_configuration
+std::vector<pose_t> target_configuration
+std::vector<std::array<double, 6>> screw_axes
+std::vector<std::array<double, 4>> self_collision
 
 ```
-

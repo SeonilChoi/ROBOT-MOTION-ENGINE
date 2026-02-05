@@ -11,16 +11,16 @@ namespace micros {
 
 class RobotManager {
 public:
-    RobotManager();
+    RobotManager(const std::string& config_file);
     ~RobotManager() = default;
-
-    void load(const std::string& config_file);
 
     void start();
 
     void stop();
 
 private:
+    void load(const std::string& config_file);
+    
     std::vector<std::unique_ptr<RobotController>> robot_controllers_;
 };
 
