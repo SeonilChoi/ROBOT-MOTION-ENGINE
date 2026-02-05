@@ -47,6 +47,9 @@ It also has a scheduler to manage states and a controller to compute control inp
 - `stop`
     : Stops motion execution and safely halts the robot.
 
+- `is_collision`
+    : Checks whether the robot collides with obstacles or with itself.
+
 ##
 
 ### Scheduler
@@ -157,3 +160,8 @@ This section describes concrete implementations that inherit from the core class
 #### `ForceController`
 
 ---
+
+## Types
+
+### `robot_config_t`
+    : 
