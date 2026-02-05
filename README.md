@@ -130,6 +130,12 @@ The `Controller` class computes control inputs to track the desired trajectory g
 
 This section describes concrete implementations that inherit from the core classes.
 
+### `RobotController` Implementations
+
+#### `OpenChainRobotController`
+
+#### `MobileRobotController`
+
 ### `Scheduler` Implementations
 
 #### `FsmScheduler`
@@ -149,3 +155,5 @@ This section describes concrete implementations that inherit from the core class
 #### `OptimalController`
 
 #### `ForceController`
+
+---
