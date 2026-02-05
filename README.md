@@ -164,6 +164,7 @@ This section describes concrete implementations that inherit from the core class
 ## Types
 
 ### `robot_config_t`
+
     : id `uint8_t`
     : driver_ids `std::vector<uint8_t>`
     : home_position `std::vector<double>`
